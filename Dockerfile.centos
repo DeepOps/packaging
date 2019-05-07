@@ -50,6 +50,9 @@ RUN make "-j$(nproc)"
 RUN make contrib "-j$(nproc)"
 RUN make install "-j$(nproc)"
 
+# Copy pam_slurm lib
+RUN cp /workdir/src/contribs/pam/.libs/pam_slurm.so /workdir/build/usr/lib/
+
 # Copy other files
 COPY files/ /workdir/build/
 
