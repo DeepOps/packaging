@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 set -ex
 
-SLURM_VERSION=18.08.5-2
+SLURM_VERSION=18.08.6-2
 UBUNTU_CODENAMES='xenial bionic'
 
 NAME=slurm-build
