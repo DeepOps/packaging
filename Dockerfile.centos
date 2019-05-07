@@ -58,7 +58,9 @@ COPY files/ /workdir/build/
 
 # Make package
 WORKDIR /workdir
-RUN fpm -s dir -t rpm -v "$SLURM_VERSION-$CENTOS_RELEASE" -n slurm -C /workdir/build .
+RUN fpm -s dir -t rpm -v "$SLURM_VERSION-$UBUNTU_CODENAME" -n slurm-nvidia \
+        --conflicts slurm \
+        -C /workdir/build .
 
 # Copy deb to /dist/
 RUN mkdir -p /dist

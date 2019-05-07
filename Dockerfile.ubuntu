@@ -39,7 +39,9 @@ COPY files/ /workdir/build/
 
 # Make package
 WORKDIR /workdir
-RUN fpm -s dir -t deb -v "$SLURM_VERSION-$UBUNTU_CODENAME" -n slurm -C /workdir/build .
+RUN fpm -s dir -t deb -v "$SLURM_VERSION-$UBUNTU_CODENAME" -n slurm-nvidia \
+        --conflicts slurm-llnl --conflicts slurm-wlm --conflicts slurmd --conflicts slurmctld --conflicts slurm-client \
+        -C /workdir/build .
 
 # Copy deb to /dist/
 RUN mkdir -p /dist
