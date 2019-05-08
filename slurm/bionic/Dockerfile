@@ -7,6 +7,13 @@ RUN apt-get update \
         curl \
         devscripts \
         fakeroot \
+        software-properties-common \
+    && rm -rf /var/lib/apt/lists/*
+
+# Add PPA to get fixed pmix package
+RUN add-apt-repository ppa:luke-yeager/slurm
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
         libpmix-dev \
     && rm -rf /var/lib/apt/lists/*
 
@@ -30,7 +37,8 @@ RUN curl -fSsL 'https://salsa.debian.org/hpc-team/slurm-wlm/merge_requests/1.dif
 COPY pmix.patch /tmp/pmix.patch
 RUN patch -p1 </tmp/pmix.patch \
     && chmod +x debian/slurm-wlm-basic-plugins.links \
-    && dch -a 'Build --with-pmix'
+    && dch -a 'Build with pmix'
+RUN dch --nmu 'Rebuild against new pmix packages with fixed symlinks'
 RUN dch --release ''
 
 RUN debuild -i -us -uc -S
