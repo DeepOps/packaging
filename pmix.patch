@@ -1,0 +1,39 @@
+diff -pNur a/debian/control b/debian/control
+--- a/debian/control	2019-03-08 14:56:41.000000000 -0800
++++ b/debian/control	2019-05-03 00:33:44.825565442 -0700
+@@ -7,6 +7,7 @@ Uploaders: Rémi Palancher <remi@rezib.o
+            Gennaro Oliva <oliva.g@na.icar.cnr.it>,
+ Build-Depends:
+  debhelper (>= 11),
++ libpmix-dev,
+  libmunge-dev,
+  libncurses5-dev,
+  libssl-dev,
+@@ -215,6 +216,7 @@ Architecture: any
+ Depends:
+  ${shlibs:Depends},
+  ${misc:Depends},
++ libpmix2,
+  adduser
+ Description: SLURM basic plugins
+  SLURM, the Simple Linux Utility for Resource Management,
+diff -pNur a/debian/rules b/debian/rules
+--- a/debian/rules	2019-03-08 14:56:41.000000000 -0800
++++ b/debian/rules	2019-05-03 00:23:56.012255474 -0700
+@@ -22,8 +22,8 @@ override_dh_auto_clean:
+ # hardening-no-fortify-functions
+ # Notice that -g in CFLAGS is still provided by dpkg-buildflags
+ override_dh_auto_configure:
+-	dh_auto_configure -- --sysconfdir=/etc/slurm-llnl --with-munge --enable-pam --without-rpath --disable-debug --enable-multiple-slurmd
+-	dh_auto_configure --builddirectory build-emulator -- -sysconfdir=/etc/slurm-llnl --with-munge --enable-pam --without-rpath --disable-debug --enable-front-end --enable-multiple-slurmd
++	dh_auto_configure -- --sysconfdir=/etc/slurm-llnl --with-munge --enable-pam --without-rpath --disable-debug --enable-multiple-slurmd --with-pmix=/usr/lib/$(DEB_HOST_MULTIARCH)/pmix
++	dh_auto_configure --builddirectory build-emulator -- -sysconfdir=/etc/slurm-llnl --with-munge --enable-pam --without-rpath --disable-debug --enable-front-end --enable-multiple-slurmd --with-pmix=/usr/lib/$(DEB_HOST_MULTIARCH)/pmix
+ 
+ override_dh_auto_build:
+ 	dh_auto_build
+diff -pNur a/debian/slurm-wlm-basic-plugins.links b/debian/slurm-wlm-basic-plugins.links
+--- a/debian/slurm-wlm-basic-plugins.links	1969-12-31 16:00:00.000000000 -0800
++++ b/debian/slurm-wlm-basic-plugins.links	2019-05-03 00:44:43.498872657 -0700
+@@ -0,0 +1,2 @@
++#! /usr/bin/dh-exec
++usr/lib/${DEB_HOST_MULTIARCH}/libpmix.so.2 usr/lib/${DEB_HOST_MULTIARCH}/libpmix.so

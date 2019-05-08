@@ -1,23 +1,27 @@
 #!/usr/bin/env bash
 set -ex
 
-SLURM_VERSION=18.08.6-2
-
 NAME=slurm-build
+TMP_DIST_DIR=./.tmp-dist
 DIST_DIR=./dist
 
 build () {
-        docker build --pull -t "$NAME" --file="$1" --build-arg SLURM_VERSION="$SLURM_VERSION" .
+        docker build --pull -t "$NAME" --file="$1" \
+                --build-arg DEBFULLNAME="${DEBFULLNAME}" \
+                --build-arg DEBEMAIL="${DEBEMAIL}" \
+                .
         docker ps -q -a -f "name=$NAME" | xargs -r docker rm
         docker create --name="$NAME" "$NAME"
-        rm -rf "$DIST_DIR"
-        docker cp "${NAME}:/dist" "$DIST_DIR"
+        rm -rf "$TMP_DIST_DIR"
+        docker cp "${NAME}:/dist" "$TMP_DIST_DIR"
         docker rm "$NAME"
-        cp "$DIST_DIR"/* .
+        mkdir -p "$DIST_DIR"
+        cp "$TMP_DIST_DIR"/* "$DIST_DIR"
+        rm -rf "$TMP_DIST_DIR"
 }
 
 build_bionic () {
-        build Dockerfile.bionic
+        build Dockerfile.bionic-ppa
 }
 
 build_centos7 () {
