@@ -1,5 +1,4 @@
-ARG CENTOS_RELEASE
-FROM centos:$CENTOS_RELEASE
+FROM centos:7
 
 # Install deps
 RUN yum makecache fast \
@@ -34,8 +33,7 @@ RUN yum makecache fast \
         wget
 RUN gem install --no-document fpm
 
-ARG CENTOS_RELEASE
-ARG SLURM_VERSION
+ARG SLURM_VERSION=18.08.6-2
 
 # Get source
 WORKDIR /workdir
@@ -58,7 +56,7 @@ COPY files/ /workdir/build/
 
 # Make package
 WORKDIR /workdir
-RUN fpm -s dir -t rpm -v "$SLURM_VERSION-$CENTOS_RELEASE" -n slurm-nvidia \
+RUN fpm -s dir -t rpm -v "$SLURM_VERSION-centos7" -n slurm-nvidia \
         --conflicts slurm \
         -C /workdir/build .
 
