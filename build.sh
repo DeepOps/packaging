@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -ex
 
-NAME=slurm-build
+NAME=deepops-packaging
 TMP_DIST_DIR=./.tmp-dist
 DIST_DIR=./dist
 
