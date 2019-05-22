@@ -14,7 +14,7 @@ RUN apt-get update \
 RUN add-apt-repository ppa:luke-yeager/slurm
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
-        libpmix-dev \
+        'libpmix-dev=3.1.2-3.1' \
     && rm -rf /var/lib/apt/lists/*
 
 RUN echo 'deb-src http://archive.ubuntu.com/ubuntu/ disco universe' >/etc/apt/sources.list.d/disco-universe-sources.list
@@ -39,6 +39,7 @@ RUN patch -p1 </tmp/pmix.patch \
     && chmod +x debian/slurm-wlm-basic-plugins.links \
     && dch -a 'Build with pmix'
 RUN dch --nmu 'Rebuild against new pmix packages with fixed symlinks'
+RUN dch --nmu 'Rebuild against pmix v3 packages'
 RUN dch --release ''
 
 RUN debuild -i -us -uc -S
