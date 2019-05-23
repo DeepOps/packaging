@@ -23,12 +23,12 @@ RUN yum makecache fast \
 WORKDIR /workdir
 
 # FIXME: where to host this?
-COPY pmix-2.1.4-1.el7.x86_64.rpm .
+COPY pmix-3.1.2-1.el7.x86_64.rpm .
 
-RUN yum localinstall -y pmix-2.1.4-1.el7.x86_64.rpm
+RUN yum localinstall -y pmix-3.1.2-1.el7.x86_64.rpm
 ARG SLURM_VERSION=18.08.6-2
 RUN wget -q "https://download.schedmd.com/slurm/slurm-${SLURM_VERSION}.tar.bz2"
 RUN echo "%_configure ./configure --enable-pam --without-shared-libslurm" >> /root/.rpmmacros
-RUN rpmbuild -ta slurm*.tar.bz2
+RUN rpmbuild -ta slurm*.tar.bz2 --define 'dist .1'
 RUN mkdir -p /dist
 RUN cp /root/rpmbuild/RPMS/x86_64/*.rpm /dist/
