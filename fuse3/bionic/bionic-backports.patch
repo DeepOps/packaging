@@ -1,0 +1,22 @@
+Fix several problems while backporting
+
+Follows advice from here:
+https://bugs.launchpad.net/ubuntu/+source/fuse3/+bug/1817437
+Index: fuse3/debian/fuse3.manpages
+===================================================================
+--- fuse3.orig/debian/fuse3.manpages
++++ fuse3/debian/fuse3.manpages
+@@ -1,2 +1,2 @@
+-usr/share/man/man1/fusermount3.1
+-usr/share/man/man8/mount.fuse3.8
++usr/share/man/man1/fusermount3.1.gz
++usr/share/man/man8/mount.fuse3.8.gz
+Index: fuse3/debian/libfuse3-dev.install
+===================================================================
+--- fuse3.orig/debian/libfuse3-dev.install
++++ fuse3/debian/libfuse3-dev.install
+@@ -1,4 +1,3 @@
+ usr/include
+ usr/lib/*/pkgconfig
+ usr/lib/*/*.so
+-usr/lib/*/*.a
