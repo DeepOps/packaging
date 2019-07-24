@@ -6,6 +6,7 @@ RUN apt-get update \
         ca-certificates \
         curl \
         devscripts \
+        equivs \
         fakeroot \
         software-properties-common \
     && rm -rf /var/lib/apt/lists/*
@@ -17,22 +18,23 @@ RUN apt-get update \
         libfuse3-dev \
     && rm -rf /var/lib/apt/lists/*
 
-RUN echo 'deb-src http://archive.ubuntu.com/ubuntu/ disco universe' >/etc/apt/sources.list.d/disco-universe-sources.list
-RUN apt-get update \
-    && apt-get build-dep -y fuse-overlayfs \
-    && rm -rf /var/lib/apt/lists/*
 WORKDIR /usr/local/src
-RUN apt-get update \
-    && apt-get source fuse-overlayfs \
-    && rm -rf /var/lib/apt/lists/*
+RUN curl -fsSL -o fuse-overlayfs_0.4.1.orig.tar.gz https://github.com/containers/fuse-overlayfs/archive/v0.4.1.tar.gz
+WORKDIR /usr/local/src/fuse-overlayfs
+RUN tar -x -f ../fuse-overlayfs_0.4.1.orig.tar.gz --strip-components=1
+RUN mkdir -p debian && cd debian \
+    && curl -fsSL -o /tmp/src.tar.gz https://salsa.debian.org/debian/fuse-overlayfs/-/archive/2cc67417979e47f9487b935eeb91b3b99f87e0e7/fuse-overlayfs-2cc67417979e47f9487b935eeb91b3b99f87e0e7.tar.gz?path=debian \
+    && tar -x -f /tmp/src.tar.gz --strip-components=2 \
+    && rm /tmp/src.tar.gz
+COPY bionic-0.4.1.patch /tmp/bionic-0.4.1.patch
+RUN patch -p1 </tmp/bionic-0.4.1.patch
 
-WORKDIR /usr/local/src/fuse-overlayfs-0.3
+RUN apt-get update \
+    && yes | mk-build-deps --install --remove \
+    && rm -rf /var/lib/apt/lists/*
 
 ARG DEBFULLNAME
 ARG DEBEMAIL
-
-RUN dch --nmu --empty ''
-RUN dch --release ''
 
 RUN debuild -i -us -uc -S
 RUN debuild -i -us -uc -b

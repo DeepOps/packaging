@@ -1,0 +1,16 @@
+Port to bionic; upgrade to v0.4.1.
+Index: fuse-overlayfs/debian/changelog
+===================================================================
+--- fuse-overlayfs.orig/debian/changelog
++++ fuse-overlayfs/debian/changelog
+@@ -1,3 +1,10 @@
++fuse-overlayfs (0.4.1-1) bionic; urgency=medium
++
++  * Port debian packaging scripts to bionic
++  * New upstream version 0.4.1
++
++ -- Luke Yeager <lyeager@nvidia.com>  Wed, 24 Jul 2019 21:40:21 +0000
++
+ fuse-overlayfs (0.3-1) unstable; urgency=medium
+ 
+   * New upstream version 0.3
